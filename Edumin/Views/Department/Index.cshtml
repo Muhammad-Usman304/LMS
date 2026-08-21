@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Edumin.Models.DepartmentModel>
+
+@{
+    Layout = "~/Views/Shared/_LayoutEdumin.cshtml";
+    ViewData["Title"] = "All Departments";
+}
+
+<div class="content-body">
+    <div class="container-fluid">
+
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>All Departments</h4>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Department</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0);">All Departments</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">All Departments</h4>
+                <a asp-controller="Department" asp-action="Create" class="btn btn-primary">+ Add new</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Department ID</th>
+                                <th>Department Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.DepartmentId</td>
+                                    <td>@item.DepartmentName</td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.DepartmentId" class="btn btn-sm btn-primary">Edit</a>
+                                        <a asp-action="Delete" asp-route-id="@item.DepartmentId"
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Are you sure you want to delete this department?')">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

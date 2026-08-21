@@ -1,0 +1,124 @@
+@model Edumin.Models.Student
+
+@{
+    var isEdit = Model != null && Model.StudentId > 0;
+}
+
+<form asp-controller="Student" asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+
+    <input type="hidden" asp-for="StudentId" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="FirstName" class="form-label"></label>
+                <input asp-for="FirstName" class="form-control" placeholder="Enter First Name" required />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="LastName" class="form-label"></label>
+                <input asp-for="LastName" class="form-control" placeholder="Enter Last Name" required />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="Enter Email" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="RegistrationDate" class="form-label"></label>
+                <input asp-for="RegistrationDate" type="date" class="form-control" />
+                <span asp-validation-for="RegistrationDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="RollNo" class="form-label"></label>
+                <input asp-for="RollNo" class="form-control" placeholder="Enter Roll No" />
+                <span asp-validation-for="RollNo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="ClassId" class="form-label">Class</label>
+                <select asp-for="ClassId" asp-items="ViewBag.ClassList" class="form-control">
+                    <option value="">Select Class</option>
+                </select>
+                <span asp-validation-for="ClassId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="GenderId" class="form-label">Gender</label>
+                <select asp-for="GenderId" asp-items="ViewBag.GenderList" class="form-control">
+                    <option value="">Select Gender</option>
+                </select>
+                <span asp-validation-for="GenderId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="MobileNumber" class="form-label"></label>
+                <input asp-for="MobileNumber" class="form-control" placeholder="Enter Mobile Number" />
+                <span asp-validation-for="MobileNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="ParentName" class="form-label"></label>
+                <input asp-for="ParentName" class="form-control" placeholder="Enter Parent Name" />
+                <span asp-validation-for="ParentName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="ParentMobileNumber" class="form-label"></label>
+                <input asp-for="ParentMobileNumber" class="form-control" placeholder="Enter Parent Mobile Number" />
+                <span asp-validation-for="ParentMobileNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="form-label"></label>
+                <input asp-for="DateOfBirth" type="date" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="form-group">
+                <label asp-for="Address" class="form-label"></label>
+                <textarea asp-for="Address" class="form-control" rows="5" placeholder="Enter Address"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <button type="submit" class="btn btn-primary">
+                @(isEdit ? "Update Student" : "Add Student")
+            </button>
+
+            <a asp-controller="Student" asp-action="Index" class="btn btn-danger light">
+                Cancel
+            </a>
+        </div>
+    </div>
+</form>

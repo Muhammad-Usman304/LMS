@@ -1,0 +1,205 @@
+﻿@model Edumin.Models.TeacherModel
+
+@{
+	Layout = "~/Views/Shared/_LayoutEdumin.cshtml";
+	ViewData["Title"] = "Add Teacher";
+}
+
+<div class="content-body">
+	<div class="container-fluid">
+
+		<div class="row page-titles mx-0">
+			<div class="col-sm-6 p-md-0">
+				<div class="welcome-text">
+					<h4>Add Teacher</h4>
+				</div>
+			</div>
+			<div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a asp-controller="Teacher" asp-action="Index">Teachers</a></li>
+					<li class="breadcrumb-item active"><a href="javascript:void(0)">Add Teacher</a></li>
+				</ol>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xl-12 col-xxl-12 col-sm-12">
+				<div class="card">
+					<div class="card-header">
+						<h5 class="card-title">Basic Info</h5>
+					</div>
+					<div class="card-body">
+						<form asp-controller="Teacher" asp-action="Create" method="post" id="addStaffForm">
+							<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="FirstName" class="form-label">First Name</label>
+										<input asp-for="FirstName" placeholder="Enter First Name" class="form-control" required />
+										<span asp-validation-for="FirstName" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="LastName" class="form-label">Last Name</label>
+										<input asp-for="LastName" placeholder="Enter Last Name" class="form-control" required />
+										<span asp-validation-for="LastName" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="Email" class="form-label">Email Here</label>
+										<input asp-for="Email" placeholder="Email Here" type="email" class="form-control" required />
+										<span asp-validation-for="Email" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="JoiningDate" class="form-label">Joining Date</label>
+										<div class="input-hasicon mb-xl-0 mb-3">
+											<input asp-for="JoiningDate" type="date" class="form-control" required />
+											<div class="icon"><i class="far fa-calendar"></i></div>
+										</div>
+										<span asp-validation-for="JoiningDate" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="Password" class="form-label">Password</label>
+										<div class="input-group pass-group">
+											<input asp-for="Password" placeholder="Password" id="password" type="password" class="form-control pass-input" required />
+											<span class="input-group-text pass-handle">
+												<i class="fa fa-eye-slash"></i>
+												<i class="fa fa-eye"></i>
+											</span>
+										</div>
+										<span asp-validation-for="Password" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label class="form-label" for="confirm_password">Confirm Password</label>
+										<div class="input-group pass-group">
+											<input placeholder="Confirm Password" id="confirm_password" type="password" class="form-control pass-input" required>
+											<span class="input-group-text pass-handle">
+												<i class="fa fa-eye-slash"></i>
+												<i class="fa fa-eye"></i>
+											</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="MobileNumber" class="form-label">Mobile Number</label>
+										<input asp-for="MobileNumber" placeholder="Mobile Number" class="form-control" required />
+										<span asp-validation-for="MobileNumber" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="GenderId" class="form-label">Gender</label>
+										<select asp-for="GenderId" asp-items="ViewBag.GenderList" class="form-control" required>
+											<option value="">Select Gender</option>
+										</select>
+										<span asp-validation-for="GenderId" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="DesignationId" class="form-label">Designation</label>
+										<select asp-for="DesignationId" asp-items="ViewBag.DesignationList" class="form-control" required>
+											<option value="">Select Designation</option>
+										</select>
+										<span asp-validation-for="DesignationId" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="DepartmentId" class="form-label">Department</label>
+										<select asp-for="DepartmentId" asp-items="ViewBag.DepartmentList" class="form-control" required>
+											<option value="">Select Department</option>
+										</select>
+										<span asp-validation-for="DepartmentId" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+										<div class="input-hasicon mb-xl-0 mb-3">
+											<input asp-for="DateOfBirth" type="date" class="form-control" required />
+											<div class="icon"><i class="far fa-calendar"></i></div>
+										</div>
+										<span asp-validation-for="DateOfBirth" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label asp-for="Education" class="form-label">Education</label>
+										<input asp-for="Education" placeholder="Education" class="form-control" required />
+										<span asp-validation-for="Education" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-lg-4 col-md-6">
+									<div class="form-group fallback w-100">
+										<label asp-for="ProfileImagePath" class="form-label">Profile Image Path</label>
+										<input asp-for="ProfileImagePath" type="text" class="form-control" placeholder="Enter image path" />
+										<span asp-validation-for="ProfileImagePath" class="text-danger"></span>
+									</div>
+								</div>
+
+								<div class="col-lg-12 col-md-12 col-sm-12">
+									<button type="submit" class="btn btn-primary">Submit</button>
+									<a asp-controller="Teacher" asp-action="Index" class="btn btn-danger light">Cancel</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Edumin_style
+{
+	<link rel="stylesheet" href="~/edumin/vendor/pickadate/themes/default.css">
+	<link rel="stylesheet" href="~/edumin/vendor/pickadate/themes/default.date.css">
+}
+
+@section Edumin_script
+{
+	<script src="~/edumin/vendor/global/global.min.js"></script>
+	<script src="~/edumin/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+	<script src="~/edumin/vendor/svganimation/vivus.min.js"></script>
+	<script src="~/edumin/vendor/svganimation/svg.animation.js"></script>
+	<script src="~/edumin/vendor/pickadate/picker.js"></script>
+	<script src="~/edumin/vendor/pickadate/picker.time.js"></script>
+	<script src="~/edumin/vendor/pickadate/picker.date.js"></script>
+	<script src="~/edumin/js/plugins-init/pickadate-init.js"></script>
+	<script src="~/edumin/js/custom.min.js"></script>
+	<script src="~/edumin/js/dlabnav-init.js"></script>
+
+	<partial name="_ValidationScriptsPartial" />
+
+	<script>
+		jQuery('#addStaffForm').submit(function (e) {
+			if (jQuery(this).find('#password').val() !== jQuery(this).find('#confirm_password').val()) {
+				e.preventDefault();
+				jQuery(this).find('#confirm_password').addClass('is-invalid');
+			}
+		})
+	</script>
+}

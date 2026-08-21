@@ -1,0 +1,41 @@
+﻿@model Edumin.Models.DepartmentModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutEdumin.cshtml";
+    ViewData["Title"] = "Edit Department";
+}
+
+<div class="content-body">
+    <div class="container-fluid">
+
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Edit Department</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Department Info</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="DepartmentId" type="hidden" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="DepartmentName" class="form-label">Department Name</label>
+                        <input asp-for="DepartmentName" class="form-control" placeholder="Enter Department Name" />
+                        <span asp-validation-for="DepartmentName" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a asp-action="Index" class="btn btn-danger light">Cancel</a>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

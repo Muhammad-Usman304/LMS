@@ -30,7 +30,8 @@ namespace Edumin.Services
 
         public async Task<int> DeleteClassAsync(int classId)
         {
-            return await _classRepository.DeleteClassAsync(classId);
+            await _classRepository.DeleteClassAsync(classId);
+            return classId;
         }
     }
 }

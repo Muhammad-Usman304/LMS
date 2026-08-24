@@ -4,7 +4,7 @@ using Edumin.Services.Interfaces;
 
 namespace Edumin.Services
 {
-    public class StudentService: IStudentService
+    public class StudentService : IStudentService
     {
         private readonly IStudentRepository _studentRepository;
         private readonly IClassRepository _classRepository;
@@ -16,7 +16,6 @@ namespace Edumin.Services
             _classRepository = classRepository;
             _genderRepository = genderRepository;
         }
-
 
         public async Task<SpResult> SaveStudentAsync(Student student)
         {
@@ -35,9 +34,9 @@ namespace Edumin.Services
 
         public async Task<int> DeleteStudentAsync(int studentId)
         {
-            return await _studentRepository.DeleteStudentAsync(studentId);
+            await _studentRepository.DeleteStudentAsync(studentId);
+            return studentId;
         }
-
 
         public async Task<IEnumerable<ClassModel>> GetAllClassesAsync()
         {
@@ -48,6 +47,5 @@ namespace Edumin.Services
         {
             return await _genderRepository.GetAllGendersAsync();
         }
-
     }
 }

@@ -42,6 +42,7 @@ namespace Edumin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Student student)
         {
             if (!ModelState.IsValid)
@@ -68,6 +69,7 @@ namespace Edumin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Student student)
         {
             if (!ModelState.IsValid)

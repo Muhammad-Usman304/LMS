@@ -1,20 +1,23 @@
 ﻿using Edumin.Data;
 using Edumin.Models;
 using Edumin.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Edumin.Repositories
 {
     public class GenderRepository : IGenderRepository
     {
-        private readonly IDapperRepository _dapperRepository;
+        private readonly AppDbContext _context;
 
-        public GenderRepository(IDapperRepository dapperRepository)
+        public GenderRepository(AppDbContext context)
         {
-            _dapperRepository = dapperRepository;
+            _context = context;
         }
+
         public async Task<IEnumerable<GenderModel>> GetAllGendersAsync()
         {
-            return await _dapperRepository.QueryAsync<GenderModel>("sp_GetAllGenders");
+            return await _context.Genders
+                .ToListAsync();
         }
     }
 }

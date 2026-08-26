@@ -1,58 +1,144 @@
-﻿using Dapper;
-using Edumin.Data;
+﻿using Edumin.Data;
 using Edumin.Models;
 using Edumin.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Edumin.Repositories
 {
     public class TeacherRepository : ITeacherRepository
     {
-        private readonly IDapperRepository _dapperRepository;
+        private readonly AppDbContext _context;
 
-        public TeacherRepository(IDapperRepository dapperRepository)
+        public TeacherRepository(AppDbContext context)
         {
-            _dapperRepository = dapperRepository;
+            _context = context;
         }
 
         public async Task<IEnumerable<TeacherModel>> GetAllTeachersAsync()
         {
-            return await _dapperRepository.QueryAsync<TeacherModel>("sp_GetAllTeachers");
+            return await (
+                from teacher in _context.Teachers
+                join gender in _context.Genders
+                    on teacher.GenderId equals gender.GenderId
+                join designation in _context.Designations
+                    on teacher.DesignationId equals designation.DesignationId
+                join department in _context.Departments
+                    on teacher.DepartmentId equals department.DepartmentId
+                select new TeacherModel
+                {
+                    TeacherId = teacher.TeacherId,
+                    FirstName = teacher.FirstName,
+                    LastName = teacher.LastName,
+                    Email = teacher.Email,
+                    JoiningDate = teacher.JoiningDate,
+                    Password = teacher.Password,
+                    MobileNumber = teacher.MobileNumber,
+                    GenderId = teacher.GenderId,
+                    DesignationId = teacher.DesignationId,
+                    DepartmentId = teacher.DepartmentId,
+                    DateOfBirth = teacher.DateOfBirth,
+                    Education = teacher.Education,
+                    ProfileImagePath = teacher.ProfileImagePath,
+
+                    GenderName = gender.GenderName,
+                    DesignationName = designation.DesignationName,
+                    DepartmentName = department.DepartmentName
+                }
+            ).ToListAsync();
         }
 
         public async Task<TeacherModel> GetTeacherByIdAsync(int teacherId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@TeacherId", teacherId);
+            return await (
+                from teacher in _context.Teachers
+                join gender in _context.Genders
+                    on teacher.GenderId equals gender.GenderId
+                join designation in _context.Designations
+                    on teacher.DesignationId equals designation.DesignationId
+                join department in _context.Departments
+                    on teacher.DepartmentId equals department.DepartmentId
+                where teacher.TeacherId == teacherId
+                select new TeacherModel
+                {
+                    TeacherId = teacher.TeacherId,
+                    FirstName = teacher.FirstName,
+                    LastName = teacher.LastName,
+                    Email = teacher.Email,
+                    JoiningDate = teacher.JoiningDate,
+                    Password = teacher.Password,
+                    MobileNumber = teacher.MobileNumber,
+                    GenderId = teacher.GenderId,
+                    DesignationId = teacher.DesignationId,
+                    DepartmentId = teacher.DepartmentId,
+                    DateOfBirth = teacher.DateOfBirth,
+                    Education = teacher.Education,
+                    ProfileImagePath = teacher.ProfileImagePath,
 
-            return await _dapperRepository.QueryFirstOrDefaultAsync<TeacherModel>("sp_GetTeacherById", parameters);
+                    GenderName = gender.GenderName,
+                    DesignationName = designation.DesignationName,
+                    DepartmentName = department.DepartmentName
+                }
+            ).FirstOrDefaultAsync();
         }
 
         public async Task<SpResult> UpsertTeacherAsync(TeacherModel model)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@TeacherId", model.TeacherId);
-            parameters.Add("@FirstName", model.FirstName);
-            parameters.Add("@LastName", model.LastName);
-            parameters.Add("@Email", model.Email);
-            parameters.Add("@JoiningDate", model.JoiningDate);
-            parameters.Add("@Password", model.Password);
-            parameters.Add("@MobileNumber", model.MobileNumber);
-            parameters.Add("@GenderId", model.GenderId);
-            parameters.Add("@DesignationId", model.DesignationId);
-            parameters.Add("@DepartmentId", model.DepartmentId);
-            parameters.Add("@DateOfBirth", model.DateOfBirth);
-            parameters.Add("@Education", model.Education);
-            parameters.Add("@ProfileImagePath", model.ProfileImagePath);
+            string action;
 
-            return await _dapperRepository.QueryFirstOrDefaultAsync<SpResult>("sp_UpsertTeacher", parameters);
+            if (model.TeacherId == 0)
+            {
+                _context.Teachers.Add(model);
+
+                action = "Inserted";
+            }
+            else
+            {
+                var existingTeacher = await _context.Teachers
+                    .FirstOrDefaultAsync(t => t.TeacherId == model.TeacherId);
+
+                if (existingTeacher == null)
+                {
+                    return new SpResult
+                    {
+                        Action = "Not Found"
+                    };
+                }
+
+                existingTeacher.FirstName = model.FirstName;
+                existingTeacher.LastName = model.LastName;
+                existingTeacher.Email = model.Email;
+                existingTeacher.JoiningDate = model.JoiningDate;
+                existingTeacher.Password = model.Password;
+                existingTeacher.MobileNumber = model.MobileNumber;
+                existingTeacher.GenderId = model.GenderId;
+                existingTeacher.DesignationId = model.DesignationId;
+                existingTeacher.DepartmentId = model.DepartmentId;
+                existingTeacher.DateOfBirth = model.DateOfBirth;
+                existingTeacher.Education = model.Education;
+                existingTeacher.ProfileImagePath = model.ProfileImagePath;
+
+                action = "Updated";
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new SpResult
+            {
+                Action = action
+            };
         }
 
         public async Task<int> DeleteTeacherAsync(int teacherId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@TeacherId", teacherId);
+            var teacher = await _context.Teachers
+                .FirstOrDefaultAsync(t => t.TeacherId == teacherId);
 
-            return await _dapperRepository.ExecuteAsync("sp_DeleteTeacher", parameters);
+            if (teacher == null)
+                return 0;
+
+            _context.Teachers.Remove(teacher);
+
+            return await _context.SaveChangesAsync();
         }
     }
 }

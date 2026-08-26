@@ -1,58 +1,92 @@
-﻿using Dapper;
-using Edumin.Data;
+﻿using Edumin.Data;
 using Edumin.Models;
 using Edumin.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Edumin.Repositories
 {
     public class StudentRepository : IStudentRepository
     {
-        private readonly IDapperRepository _dapperRespository;
+        private readonly AppDbContext _context;
 
-        public StudentRepository(IDapperRepository dapperRespository)
+        public StudentRepository(AppDbContext context)
         {
-            _dapperRespository = dapperRespository;
+            _context = context;
         }
+
         public async Task<int> DeleteStudentAsync(int studentId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@StudentId", studentId);
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.StudentId == studentId);
 
-            return await _dapperRespository.ExecuteAsync("sp_DeleteStudent", parameters);
+            if (student == null)
+                return 0;
+
+            _context.Students.Remove(student);
+
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Student>> GetAllStudentsAsync()
         {
-            return await _dapperRespository.QueryAsync<Student>("sp_GetAllStudents");
+            return await _context.Students
+                .Include(s => s.Class)
+                .Include(s => s.Gender)
+                .ToListAsync();
         }
 
         public async Task<Student> GetStudentByIdAsync(int studentId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@StudentId", studentId);
-
-            return await _dapperRespository.QueryFirstOrDefaultAsync<Student>("sp_GetStudentById", parameters);
+            return await _context.Students
+                .Include(s => s.Class)
+                .Include(s => s.Gender)
+                .FirstOrDefaultAsync(s => s.StudentId == studentId);
         }
 
         public async Task<SpResult> UpsertStudentAsync(Student student)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@StudentId", student.StudentId);
-            parameters.Add("@FirstName", student.FirstName);
-            parameters.Add("@LastName", student.LastName);
-            parameters.Add("@Email", student.Email);
-            parameters.Add("@RegistrationDate", student.RegistrationDate);
-            parameters.Add("@RollNo", student.RollNo);
-            parameters.Add("@ClassId", student.ClassId);
-            parameters.Add("@GenderId", student.GenderId);
-            parameters.Add("@MobileNumber", student.MobileNumber);
-            parameters.Add("@ParentName", student.ParentName);
-            parameters.Add("@ParentMobileNumber", student.ParentMobileNumber);
-            parameters.Add("@DateOfBirth", student.DateOfBirth);
-            parameters.Add("@Address", student.Address);
+            string action;
 
+            if (student.StudentId == 0)
+            {
+                _context.Students.Add(student);
+                action = "Inserted";
+            }
+            else
+            {
+                var existingStudent = await _context.Students
+                    .FirstOrDefaultAsync(s => s.StudentId == student.StudentId);
 
-            return await _dapperRespository.QueryFirstOrDefaultAsync<SpResult>("sp_UpsertStudent", parameters);
+                if (existingStudent == null)
+                {
+                    return new SpResult
+                    {
+                        Action = "Not Found"
+                    };
+                }
+
+                existingStudent.FirstName = student.FirstName;
+                existingStudent.LastName = student.LastName;
+                existingStudent.Email = student.Email;
+                existingStudent.RegistrationDate = student.RegistrationDate;
+                existingStudent.RollNo = student.RollNo;
+                existingStudent.ClassId = student.ClassId;
+                existingStudent.GenderId = student.GenderId;
+                existingStudent.MobileNumber = student.MobileNumber;
+                existingStudent.ParentName = student.ParentName;
+                existingStudent.ParentMobileNumber = student.ParentMobileNumber;
+                existingStudent.DateOfBirth = student.DateOfBirth;
+                existingStudent.Address = student.Address;
+
+                action = "Updated";
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new SpResult
+            {
+                Action = action
+            };
         }
     }
 }

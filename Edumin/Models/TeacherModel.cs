@@ -1,7 +1,12 @@
-﻿namespace Edumin.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Edumin.Models
 {
     public class TeacherModel
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TeacherId { get; set; }
 
         public string FirstName { get; set; }
